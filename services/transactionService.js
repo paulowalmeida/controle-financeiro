@@ -24,7 +24,7 @@ const save = async ({description, value, category, year, month, day, type}) => {
         });
 
         return await transaction.save();
-    } catch (error){
+    } catch (error) {
         throw new Error(error.message);
     }
 }
@@ -62,13 +62,13 @@ const update = async (id, body) => {
         yearMonthDay: `${body.year}-${appendLeadingZeroes(body.month)}-${appendLeadingZeroes(body.day)}`
     }
     try {
-        const data = await TransactionModel.findByIdAndUpdate({_id:id}, transaction, {
+        const data = await TransactionModel.findByIdAndUpdate({_id: id}, transaction, {
             new: true,
         });
 
-        if(!data){
-            throw new Error('Grade não encontrada');
-        } else{
+        if (!data) {
+            throw new Error('Transação não encontrada');
+        } else {
             return data;
         }
     } catch (error) {
@@ -76,4 +76,31 @@ const update = async (id, body) => {
     }
 };
 
-module.exports = {save, findAll, findById, update};
+const remove = async (id) => {
+    try {
+        const data = await TransactionModel.findByIdAndRemove({_id: id});
+
+        if (!data) {
+            throw new Error('Transação não encontrada');
+        } else {
+            return data;
+        }
+    } catch (error) {
+        throw new Error(error.message);
+    }
+};
+
+const removeAll = async () => {
+    try {
+        const data = await TransactionModel.deleteMany();
+        if (!data) {
+            throw new Error('Transação não encontrada');
+        } else {
+            return data;
+        }
+    } catch (error) {
+        throw new Error(error.message);
+    }
+};
+
+module.exports = {save, findAll, findById, update, remove, removeAll};
